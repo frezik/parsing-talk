@@ -9,25 +9,26 @@ sub new
     my ($class) = @_;
     my $self = {};
 
-    my $grammar = Marpa::R2::Grammar->new(
-        start          => 'Func',
+    my $grammar = Marpa::R2::Grammar->new({
+        start          => 'func',
         actions        => 'Marpa::MyActions',
         default_action => 'firstArg',
+        terminals      => [qw{
+            OPEN_PAREN CLOSE_PAREN INTEGER
+            OP_ADD OP_SUBTRACT OP_MULTIPLY OP_DIVIDE
+        }],
         rules => [
-            { lhs => 'Func', rhs => [qw/OpenParen Op Args CloseParen/] },
-            { lhs => 'OpenParen',  rhs => [ '(' ] },
-            { lhs => 'CloseParen', rhs => [ ')' ] },
-            { lhs => 'Op',         rhs => [ '+' ] },
-            { lhs => 'Op',         rhs => [ '-' ] },
-            { lhs => 'Op',         rhs => [ '*' ] },
-            { lhs => 'Op',         rhs => [ '/' ] },
-            { lhs => 'Args',       rhs => [ 'Intger' ], min => 0 },
-            map( { 
-                { lhs => 'Integer', rhs => [ $_ ] }
-            } 0 .. 9),
+            { lhs => 'func', rhs => [qw{ OPEN_PAREN op args CLOSE_PAREN }] },
+            { lhs => 'op',   rhs => [qw{ OP_ADD      }] },
+            { lhs => 'op',   rhs => [qw{ OP_SUBTRACT }] },
+            { lhs => 'op',   rhs => [qw{ OP_MULTIPLY }] },
+            { lhs => 'op',   rhs => [qw{ OP_DIVIDE   }] },
+            { lhs => 'args', rhs => [qw{ arg }], min => 0 },
+            { lhs => 'arg',  rhs => [qw{ INTEGER }] },
+            { lhs => 'arg',  rhs => [qw{ func }] },
         ],
-    );
-    $grammar->precompile;
+    });
+    $grammar->precompute;
 
     my $self = {
         marpa => $grammar,
