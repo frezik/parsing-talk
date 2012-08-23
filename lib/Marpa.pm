@@ -18,12 +18,21 @@ sub new
             OP_ADD OP_SUBTRACT OP_MULTIPLY OP_DIVIDE
         }],
         rules => [
-            { lhs => 'func', rhs => [qw{ OPEN_PAREN op args CLOSE_PAREN }] },
+            {
+                lhs    => 'func',
+                rhs    => [qw{ OPEN_PAREN op args CLOSE_PAREN }],
+                action => 'funcList',
+            },
+            {
+                lhs    => 'args',
+                rhs    => [qw{ arg }],
+                min    => 0,
+                action => 'listArg',
+            },
             { lhs => 'op',   rhs => [qw{ OP_ADD      }] },
             { lhs => 'op',   rhs => [qw{ OP_SUBTRACT }] },
             { lhs => 'op',   rhs => [qw{ OP_MULTIPLY }] },
             { lhs => 'op',   rhs => [qw{ OP_DIVIDE   }] },
-            { lhs => 'args', rhs => [qw{ arg }], min => 0 },
             { lhs => 'arg',  rhs => [qw{ INTEGER }] },
             { lhs => 'arg',  rhs => [qw{ func }] },
         ],
@@ -48,7 +57,7 @@ sub parse
     my $recog = Marpa::R2::Recognizer->new({ grammar => $marpa });
     $recog->read( @$_ ) for @$tokens;
 
-    my $parse_result = $recog->value;
+    my $parse_result = ${ $recog->value };
     return $parse_result;
 }
 
@@ -63,6 +72,12 @@ sub Marpa::MyActions::firstArg
 {
     my (undef, $arg) = @_;
     return $arg;
+}
+
+sub Marpa::MyActions::listArg
+{
+    my (undef, @args) = @_;
+    return \@args;
 }
 
 
