@@ -1,6 +1,6 @@
 #!/usr/bin/perl
 use v5.14;
-use Test::More tests => 25;
+use Test::More tests => 24;
 use lib '.';
 
 my $MOD = shift or die "Need a module to test\n";
@@ -19,6 +19,11 @@ cmp_ok( $eval->eval( [ '/', 10, 2 ] ), '==', 5,  "Division" );
 cmp_ok( $eval->eval( [ '+', 1, [ '-', 5, 2 ] ] ),
     '==', 4,
     "Deep tree" );
+
+eval {
+    $eval->eval( [ 'no-such-func', 1 ] );
+};
+ok( $@, "No such function error" );
 
 
 my $parser = $MOD->new;
