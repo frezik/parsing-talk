@@ -18,6 +18,6 @@ $harness->runtests(
     [ 'test_evaluator.pl', 'Evaluator' ],
     [ 'test_tokenizer.pl', 'Tokenizer' ],
     map {
-        [ 'test.pl', $_ ],
+        [ 'test_parser_impl.pl', $_ ],
     } @MODULES_TO_TEST
 );
