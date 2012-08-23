@@ -4,6 +4,7 @@ use TAP::Harness;
 
 my @MODULES_TO_TEST = (
     'ParseRecDescent',
+    'Marpa',
 );
 
 my $harness = TAP::Harness->new({

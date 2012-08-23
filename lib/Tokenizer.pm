@@ -6,8 +6,11 @@ use constant TOKENS => [
     [ 'OPEN_PAREN',  qr/\(/  ],
     [ 'CLOSE_PAREN', qr/\)/  ],
     [ 'INTEGER',     qr/\d+/ ],
-    [ 'WHITESPACE',  qr/\s+/ ],
-    [ 'OP',          qr/[\+\-\*\/]/  ],
+    [ 'WHITESPACE',  qr/\s+/, sub {()} ],
+    [ 'OP_ADD',      qr/\+/  ],
+    [ 'OP_SUBTRACT', qr/\-/  ],
+    [ 'OP_MULTIPLY', qr/\*/  ],
+    [ 'OP_DIVIDE',   qr/\//  ],
 ];
 
 sub new
