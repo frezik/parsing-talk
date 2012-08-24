@@ -17,9 +17,36 @@ sub parse
     my $marpa = $$self{marpa};
 
     my $tokenizer = Tokenizer->new;
-    my $tokens = $tokenizer->tokenize( $text );
+    my @tokens = @{ $tokenizer->tokenize( $text ) };
 
-    return [];
+    my $ast = $self->_read( \@tokens );
+    return $ast;
+}
+
+
+sub _read
+{
+    my ($self, $tokens) = @_;
+    die "Unexpected EOF while reading\n" unless @$tokens;
+
+    my @ast;
+    my $token = shift @$tokens;
+    my ($token_name, $token_value) = @$token;
+    if( $token_name eq 'OPEN_PAREN' ) {
+        my @ast;
+        while( $$tokens[0][0] ne 'CLOSE_PAREN' ) {
+            push @ast => $self->_read( $tokens );
+        }
+        return \@ast;
+    }
+    elsif( $token_name eq 'CLOSE_PAREN' ) {
+        die "Unexpected close paren\n";
+    }
+    else {
+        return $token_value;
+    }
+
+    return ();
 }
 
 

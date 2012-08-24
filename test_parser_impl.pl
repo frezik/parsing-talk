@@ -2,6 +2,7 @@
 use v5.14;
 use Test::More tests => 15;
 use Evaluator ();
+use Data::Dumper 'Dumper';
 
 my $MOD = shift or BAIL_OUT "Need a module to test\n";
 use_ok( $MOD );
@@ -48,10 +49,13 @@ foreach my $test (@TESTS) {
     my $expression = $$test{expression};
     my $expect     = $$test{expect};
     my $eval_to    = $$test{eval};
+    my $dump       = $$test{dump};
 
     my $got_ast = $parser->parse( $expression );
     my $got_eval = $eval->eval( $got_ast );
 
     is_deeply( $got_ast, $expect, "Abstract syntax tree generated" );
     cmp_ok( $got_eval, '==', $eval_to, "Evaluated correctly" );
+
+    diag Dumper( $got_ast ) if $dump;
 }
