@@ -1,6 +1,6 @@
 start = func
 
-func = open_paren op arg arg {arg} close_paren
+func = open_paren op arg {arg} close_paren
 
 arg = integer | func
 
