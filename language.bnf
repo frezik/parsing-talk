@@ -4,7 +4,7 @@ func = open_paren op arg {arg} close_paren
 
 arg = integer | func
 
-integer = { digit }
+integer = digit { digit }
 
 open_paren = "("
 close_paren = ")"
