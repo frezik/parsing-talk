@@ -5,7 +5,7 @@ use Parse::RecDescent;
 my $GRAMMAR = <<'END_GRAMMAR';
     startrule: func
 
-    func: open_paren op arg(s?) close_paren
+    func: open_paren op arg(s) close_paren
         {
             $return = [
                 $item[2],

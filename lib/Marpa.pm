@@ -1,6 +1,6 @@
 package Marpa;
 use v5.14;
-use Marpa::R2;
+use Marpa::PP;
 use Tokenizer;
 
 
@@ -9,7 +9,7 @@ sub new
     my ($class) = @_;
     my $self = {};
 
-    my $grammar = Marpa::R2::Grammar->new({
+    my $grammar = Marpa::PP::Grammar->new({
         start          => 'func',
         actions        => 'Marpa::MyActions',
         default_action => 'firstArg',
@@ -26,7 +26,7 @@ sub new
             {
                 lhs    => 'args',
                 rhs    => [qw{ arg }],
-                min    => 0,
+                min    => 1,
                 action => 'listArg',
             },
             { lhs => 'op',   rhs => [qw{ OP_ADD      }] },
@@ -54,7 +54,7 @@ sub parse
     my $tokenizer = Tokenizer->new;
     my $tokens = $tokenizer->tokenize( $text );
 
-    my $recog = Marpa::R2::Recognizer->new({ grammar => $marpa });
+    my $recog = Marpa::PP::Recognizer->new({ grammar => $marpa });
     $recog->read( @$_ ) for @$tokens;
 
     my $parse_result = ${ $recog->value };
